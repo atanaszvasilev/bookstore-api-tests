@@ -53,7 +53,7 @@ jobs:
           node-version: 20
 
       - name: Copy environment file
-        run: cp .env.${{ env.ENV }} .env
+        run: cp .env.${{ needs.build.outputs.ENV }} .env
 
       - name: Run tests on Node
         if: ${{ github.event.inputs.runner == 'node' }}
