@@ -1,0 +1,12 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "nodenext",
+    "strict": true,
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  }
+}

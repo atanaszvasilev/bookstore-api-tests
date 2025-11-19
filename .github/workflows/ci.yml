@@ -1,0 +1,96 @@
+name: CI Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    name: Run Jest Tests (${{ matrix.env }} - ${{ matrix.mode }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        env: [ stage, prod ]
+        mode: [ node, docker ]   # Two options: run directly or inside Docker
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node (only for node mode)
+        if: matrix.mode == 'node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (node mode)
+        if: matrix.mode == 'node'
+        run: npm ci
+
+      - name: Copy environment file
+        run: cp .env.${{ matrix.env }} .env
+
+      # ---------------------- TEST MODE: NODE ----------------------
+      - name: Run tests in Node
+        if: matrix.mode == 'node'
+        run: npm run test:${{ matrix.env }}
+
+      # ---------------------- TEST MODE: DOCKER --------------------
+      - name: Build Docker image
+        if: matrix.mode == 'docker'
+        run: docker build -t test-image .
+
+      - name: Run tests in Docker
+        if: matrix.mode == 'docker'
+        run: |
+          docker run \
+            -v ${{ github.workspace }}/logs:/usr/src/app/logs \
+            -v ${{ github.workspace }}/allure-results:/usr/src/app/allure-results \
+            -e NODE_ENV=${{ matrix.env }} \
+            test-image
+
+      # ---------------------- ARTIFACTS ----------------------------
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-${{ matrix.env }}-${{ matrix.mode }}
+          path: |
+            logs/
+            allure-results/
+          if-no-files-found: ignore
+
+  # --------------------------- DEPLOY ALLURE ---------------------------
+  deploy-allure:
+    name: Deploy Allure Report
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download artifacts from test jobs
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Generate Allure Report
+        run: |
+          mkdir -p output
+          cp -r artifacts/**/allure-results output/ || true
+          npm ci
+          npm run allure:generate
+
+      - name: Upload Allure HTML Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: output/allure-report
