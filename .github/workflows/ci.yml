@@ -34,7 +34,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm insatall
+        run: npm install
 
       - name: Save environment inputs
         run: echo "ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
@@ -86,7 +86,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm insatall
+        run: npm install
 
       - name: Generate Allure report
         run: npm run allure:generate
