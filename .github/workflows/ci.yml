@@ -36,14 +36,15 @@ jobs:
         with:
           node-version: 20
 
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: node-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
       - name: Install dependencies
         run: npm install
-
-      - name: Upload node_modules
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-modules
-          path: node_modules
 
       - name: Set environment outputs
         id: set-env
@@ -66,11 +67,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Download node_modules
-        uses: actions/download-artifact@v4
+      - name: Restore node_modules cache
+        uses: actions/cache@v3
         with:
-          name: node-modules
-          path: ./node_modules
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Copy environment file
         run: cp .env.${{ needs.build.outputs.ENV }} .env
@@ -88,7 +89,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: logs-${{ needs.build.outputs.ENV }}
-          path: logs
+          path: ./logs
           if-no-files-found: ignore
 
   deploy-allure:
@@ -104,11 +105,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Download node_modules
-        uses: actions/download-artifact@v4
+      - name: Restore node_modules cache
+        uses: actions/cache@v3
         with:
-          name: node-modules
-          path: ./node_modules
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Generate Allure report
         run: npm run allure:generate
@@ -117,7 +118,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-${{ needs.build.outputs.ENV }}
-          path: output
+          path: ./output
           if-no-files-found: ignore
 
       - name: Display Allure report URL
