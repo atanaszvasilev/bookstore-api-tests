@@ -2,8 +2,10 @@ name: CI Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ '**' ]         # Trigger on push to any branch
   pull_request:
+    branches: [ '**' ]         # Trigger on PR to any branch
+  workflow_dispatch:  
 
 jobs:
   test:
