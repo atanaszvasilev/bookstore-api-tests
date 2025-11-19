@@ -99,4 +99,5 @@ jobs:
           if-no-files-found: ignore
 
       - name: Display Allure report URL
-        run: echo "Allure report: $(pwd)/output/allure-report/index.html"
+        run: |
+          echo "Allure report: $(pwd)/output/allure-report/index.html"
