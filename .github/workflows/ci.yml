@@ -24,28 +24,36 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    outputs:
+      ENV: ${{ steps.set-env.outputs.ENV }}
+      RUNNER: ${{ steps.set-env.outputs.RUNNER }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies locally
-        run: |
-          npm install
-          echo "Node modules installed in $(pwd)/node_modules"
+      - name: Install dependencies
+        run: npm install
 
-      - name: Save environment
-        run: echo "ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+      - name: Set environment outputs
+        id: set-env
+        run: |
+          echo "ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "RUNNER=${{ github.event.inputs.runner }}" >> $GITHUB_ENV
+          echo "::set-output name=ENV::${{ github.event.inputs.environment }}"
+          echo "::set-output name=RUNNER::${{ github.event.inputs.runner }}"
 
   run-tests:
     name: Run Tests
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -56,18 +64,18 @@ jobs:
         run: cp .env.${{ needs.build.outputs.ENV }} .env
 
       - name: Run tests on Node
-        if: ${{ github.event.inputs.runner == 'node' }}
-        run: ./node_modules/.bin/npx cross-env ENV=${{ env.ENV }} ./node_modules/.bin/jest --config jest.config.ts
+        if: ${{ needs.build.outputs.RUNNER == 'node' }}
+        run: ./node_modules/.bin/npx cross-env ENV=${{ needs.build.outputs.ENV }} ./node_modules/.bin/jest --config jest.config.ts
 
       - name: Run tests in Docker
-        if: ${{ github.event.inputs.runner == 'docker' }}
-        run: npm run docker:test:${{ env.ENV }}
+        if: ${{ needs.build.outputs.RUNNER == 'docker' }}
+        run: npm run docker:test:${{ needs.build.outputs.ENV }}
 
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logs-${{ env.ENV }}
+          name: logs-${{ needs.build.outputs.ENV }}
           path: logs/
           if-no-files-found: ignore
 
@@ -76,14 +84,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: run-tests
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies locally
+      - name: Install dependencies
         run: npm install
 
       - name: Generate Allure report
@@ -92,7 +101,7 @@ jobs:
       - name: Upload Allure report and logs
         uses: actions/upload-artifact@v4
         with:
-          name: allure-${{ env.ENV }}
+          name: allure-${{ needs.build.outputs.ENV }}
           path: |
             output/allure-report
             logs/
