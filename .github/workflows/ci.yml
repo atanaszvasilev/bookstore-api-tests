@@ -24,6 +24,9 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    outputs:
+      ENV: ${{ steps.set-env.outputs.ENV }}
+      RUNNER: ${{ steps.set-env.outputs.RUNNER }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,9 +39,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Save environment inputs
-        run: echo "ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
-        shell: bash
+      - name: Set environment outputs
+        id: set-env
+        run: |
+          echo "ENV=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "RUNNER=${{ github.event.inputs.runner }}" >> $GITHUB_ENV
+          echo "::set-output name=ENV::${{ github.event.inputs.environment }}"
+          echo "::set-output name=RUNNER::${{ github.event.inputs.runner }}"
 
   run-tests:
     name: Run Tests
@@ -54,21 +61,21 @@ jobs:
           node-version: 20
 
       - name: Copy environment file
-        run: cp .env.${{ env.ENV }} .env
+        run: cp .env.${{ needs.build.outputs.ENV }} .env
 
       - name: Run tests on Node
-        if: ${{ github.event.inputs.runner == 'node' }}
-        run: npm run test:${{ env.ENV }}
+        if: ${{ needs.build.outputs.RUNNER == 'node' }}
+        run: npm run test:${{ needs.build.outputs.ENV }}
 
       - name: Run tests in Docker
-        if: ${{ github.event.inputs.runner == 'docker' }}
-        run: npm run docker:test:${{ env.ENV }}
+        if: ${{ needs.build.outputs.RUNNER == 'docker' }}
+        run: npm run docker:test:${{ needs.build.outputs.ENV }}
 
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logs-${{ env.ENV }}
+          name: logs-${{ needs.build.outputs.ENV }}
           path: logs/
           if-no-files-found: ignore
 
@@ -94,7 +101,7 @@ jobs:
       - name: Upload Allure report and logs
         uses: actions/upload-artifact@v4
         with:
-          name: allure-${{ env.ENV }}
+          name: allure-${{ needs.build.outputs.ENV }}
           path: |
             output/allure-report
             logs/
