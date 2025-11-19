@@ -39,6 +39,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-modules
+          path: node_modules
+
       - name: Set environment outputs
         id: set-env
         run: |
@@ -60,12 +66,18 @@ jobs:
         with:
           node-version: 20
 
+      - name: Download node_modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: ./node_modules
+
       - name: Copy environment file
         run: cp .env.${{ needs.build.outputs.ENV }} .env
 
       - name: Run tests on Node
         if: ${{ needs.build.outputs.RUNNER == 'node' }}
-        run: ./node_modules/.bin/npx cross-env ENV=${{ needs.build.outputs.ENV }} ./node_modules/.bin/jest --config jest.config.ts
+        run: npm run test:${{ needs.build.outputs.ENV }}
 
       - name: Run tests in Docker
         if: ${{ needs.build.outputs.RUNNER == 'docker' }}
@@ -76,7 +88,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: logs-${{ needs.build.outputs.ENV }}
-          path: logs/
+          path: logs
           if-no-files-found: ignore
 
   deploy-allure:
@@ -92,8 +104,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install
+      - name: Download node_modules
+        uses: actions/download-artifact@v4
+        with:
+          name: node-modules
+          path: ./node_modules
 
       - name: Generate Allure report
         run: npm run allure:generate
@@ -102,9 +117,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-${{ needs.build.outputs.ENV }}
-          path: |
-            output/allure-report
-            logs/
+          path: output
           if-no-files-found: ignore
 
       - name: Display Allure report URL

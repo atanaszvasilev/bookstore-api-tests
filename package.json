@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx cross-env ENV=$ENV jest --config jest.config.ts",
+    "test": "cross-env ENV=$ENV jest --config jest.config.ts",
     
     "test:stage": "cross-env ENV=stage npm run test",
     "test:prod": "cross-env ENV=prod npm run test",
