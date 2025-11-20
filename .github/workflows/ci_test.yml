@@ -56,7 +56,7 @@ jobs:
   generate-and-publish-allure:
     name: Generate and Publish Allure Report
     runs-on: ubuntu-latest
-    needs: execute-tests
+    needs: test
     if: always()
     permissions:
       pages: write
