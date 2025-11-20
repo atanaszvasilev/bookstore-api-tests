@@ -1,4 +1,4 @@
-name: CI / Test Runner
+name: Manual CI / Test Runner
 
 on:
   workflow_dispatch:
@@ -25,14 +25,17 @@ on:
       - master
 
 jobs:
-  test:
-    name: Run Tests
+  # -----------------------------
+  # JOB 1: Tests on GitHub runner
+  # -----------------------------
+  github-runner-tests:
+    name: GitHub Runner Tests
+    if: github.event_name == 'push' || github.event.inputs.runner == 'github runner'
     runs-on: ubuntu-latest
-
+    
     env:
       EFFECTIVE_ENV: ${{ github.event_name == 'push' && 'prod' || github.event.inputs.environment }}
-      EFFECTIVE_RUNNER: ${{ github.event_name == 'push' && 'docker container' || github.event.inputs.runner }}
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -50,24 +53,36 @@ jobs:
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
       - name: Run tests on GitHub runner
-        if: ${{ env.EFFECTIVE_RUNNER == 'github runner' }}
+        if: ${{ github.event.inputs.runner == 'github runner' }}
         run: |
           npm install
-          npm run test:${{ env.EFFECTIVE_ENV }}
+          npm run test:${{ github.event.inputs.environment }}
+  
+  # --------------------------------
+  # JOB 2: Tests on Docker container
+  # --------------------------------
+  docker-container-tests:
+    name: Docker Container Tests
+    if: github.event_name == 'push' || github.event.inputs.runner == 'docker container'
+    runs-on: ubuntu-latest
 
+    env:
+      EFFECTIVE_ENV: ${{ github.event_name == 'push' && 'prod' || github.event.inputs.environment }}
+    
+    steps:
       - name: Run tests in Docker container
-        if: ${{ env.EFFECTIVE_RUNNER == 'docker container' }}
+        if: ${{ github.event.inputs.runner == 'docker container' }}
         run: |
-          mkdir -p logs
-          mkdir -p output/allure-results
-          chmod -R 777 logs
-          chmod -R 777 output/allure-results
-
+          mkdir -p ${{ github.workspace }}/logs
+          mkdir -p ${{ github.workspace }}/output/allure-results
+          chmod -R 777 ${{ github.workspace }}/logs
+          chmod -R 777 ${{ github.workspace }}/output/allure-results
           docker build -t bookstore-api-tests .
           docker run --rm \
+            --user $(id -u):$(id -g) \
             -v ${{ github.workspace }}/logs:/usr/src/app/logs \
             -v ${{ github.workspace }}/output/allure-results:/usr/src/app/output/allure-results \
-            -e ENV=${{ env.EFFECTIVE_ENV }} \
+            -e ENV=${{ github.event.inputs.environment }} \
             bookstore-api-tests \
             npm run test
 
@@ -105,11 +120,11 @@ jobs:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
-      - name: Download Allure results from tests artifacts
-        uses: actions/download-artifact@v4
-        with:
+      - name: Download Allure results from tests artifacts 
+        uses: actions/download-artifact@v4 
+        with: 
           name: test-artifacts
-
+      
       - name: Generate Allure Report
         run: npm run allure:generate
 
