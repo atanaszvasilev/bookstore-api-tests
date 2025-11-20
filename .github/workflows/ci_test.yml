@@ -27,8 +27,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          path: .
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -54,7 +52,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: output/allure-report
+          publish_dir: ./output/allure-report
 
       - name: Upload artifacts
         if: always()
@@ -62,6 +60,6 @@ jobs:
         with:
           name: test-artifacts
           path: |
-            logs
-            output/allure-results
+            ./logs
+            ./output/allure-results
           if-no-files-found: ignore
