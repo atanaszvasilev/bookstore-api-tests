@@ -117,31 +117,13 @@ jobs:
         with:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
-
-      - name: Download Allure results from tests artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: test-artifacts
-          path: ./test-artifacts
-
-      - name: Load Allure history from gh-pages
-        uses: actions/checkout@v4
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages-history
-
+      
       - name: Generate Allure Report
-        id: report
-        uses: simple-elf/allure-report-action@master
-        with:
-          gh_pages: gh-pages-history
-          allure_history: allure-history
-          allure_results: ./test-artifacts/output/allure-results
+        run: npm run allure:generate
 
       - name: Publish to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: allure-history
+          publish_dir: ./output/allure-report
