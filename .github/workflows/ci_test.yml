@@ -51,11 +51,12 @@ jobs:
         run: |
           docker build -t bookstore-api-tests .
           docker run --rm \
+            --user $(id -u):$(id -g) \
             -v ${{ github.workspace }}/logs:/usr/src/app/logs \
             -v ${{ github.workspace }}/output/allure-results:/usr/src/app/output/allure-results \
             -e ENV=${{ github.event.inputs.environment }} \
             bookstore-api-tests \
-            npm run test:${{ github.event.inputs.environment }}
+            npm run test
 
       - name: Upload artifacts
         if: always()
