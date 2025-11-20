@@ -99,7 +99,9 @@ jobs:
   generate-and-publish-allure:
     name: Generate and Publish Allure Report
     runs-on: ubuntu-latest
-    needs: test
+    needs: 
+      - github-runner-tests
+      - docker-container-tests
     if: always()
     permissions:
       pages: write
