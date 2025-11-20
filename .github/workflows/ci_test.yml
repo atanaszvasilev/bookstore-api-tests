@@ -33,6 +33,13 @@ jobs:
         with:
           node-version: 20
 
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        id: node-cache
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
       - name: Run tests on GitHub runner
         if: ${{ github.event.inputs.runner == 'github runner' }}
         run: |
@@ -70,7 +77,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-modules-${{ hashFiles('package-lock.json') }}
+
       - name: Download Allure results from tests artifacts 
         uses: actions/download-artifact@v4 
         with: 
