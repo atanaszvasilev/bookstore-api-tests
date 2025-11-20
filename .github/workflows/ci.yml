@@ -84,12 +84,14 @@ jobs:
         if: ${{ needs.build.outputs.RUNNER == 'docker' }}
         run: npm run docker:test:${{ needs.build.outputs.ENV }}
 
-      - name: Upload logs
+      - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: logs-${{ needs.build.outputs.ENV }}
-          path: ./logs
+          name: test-artifacts
+          path: |
+            ./logs
+            ./output/allure-results
           if-no-files-found: ignore
 
   deploy-and-publish-allure:
@@ -115,10 +117,10 @@ jobs:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
-      - name: Download Allure results from tests
+      - name: Download Allure results from tests artifacts
         uses: actions/download-artifact@v4
         with:
-          name: allure-results
+          name: test-artifacts
           path: ./output/allure-results
 
       - name: Load Allure history from gh-pages
