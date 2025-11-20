@@ -122,7 +122,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: test-artifacts
-          path: ./output/allure-results
+          path: ./artifacts/output/allure-results
 
       - name: Load Allure history from gh-pages
         uses: actions/checkout@v4
@@ -137,7 +137,7 @@ jobs:
         with:
           gh_pages: gh-pages-history
           allure_history: allure-history
-          allure_results: ./output/allure-results
+          allure_results: ./artifacts/output/allure-results
 
       - name: Publish to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
