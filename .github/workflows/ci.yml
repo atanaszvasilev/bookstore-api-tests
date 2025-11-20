@@ -78,7 +78,13 @@ jobs:
 
       - name: Run tests in Docker container
         if: ${{ needs.build.outputs.RUNNER == 'Docker container' }}
-        run: npm run docker:test:${{ needs.build.outputs.ENV }}
+        run: | 
+          docker run --rm \
+          -v ${{ github.workspace }}/logs:/usr/src/app/logs \
+          -v ${{ github.workspace }}/output/allure-results:/usr/src/app/output/allure-results \
+          -e ENV=${{ github.event.inputs.environment }} \
+          bookstore-api-tests \
+          npm run test:${{ github.event.inputs.environment }}
 
       - name: Upload artifacts
         if: always()
