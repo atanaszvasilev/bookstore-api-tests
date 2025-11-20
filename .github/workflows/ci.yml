@@ -115,6 +115,9 @@ jobs:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
+      - name: Generate Allure Report
+        run: npm run allure:generate
+
       - name: Load Allure history from gh-pages
         uses: actions/checkout@v4
         continue-on-error: true
@@ -136,8 +139,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
-          
-      - name: Show published report URL
-        run: |
-          echo "Allure report published to:"
-          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
