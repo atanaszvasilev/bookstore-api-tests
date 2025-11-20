@@ -22,7 +22,7 @@ on:
 
 jobs:
   test:
-    name: Run tests and publish report
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -43,18 +43,6 @@ jobs:
         if: ${{ github.event.inputs.runner == 'docker container' }}
         run: npm run docker:test:${{ github.event.inputs.environment }}
 
-      - name: Generate Allure Report
-        if: always()
-        run: npm run allure:generate
-
-      - name: Publish to GitHub Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: ../output/allure-report
-
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -64,3 +52,36 @@ jobs:
             ./logs
             ./output/allure-results
           if-no-files-found: ignore
+
+  generate-and-publish-allure:
+    name: Generate and Publish Allure Report
+    runs-on: ubuntu-latest
+    needs: execute-tests
+    if: always()
+    permissions:
+      pages: write
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+      - name: Download Allure results from tests artifacts 
+        uses: actions/download-artifact@v4 
+        with: 
+          name: test-artifacts
+      
+      - name: Generate Allure Report
+        run: npm run allure:generate
+
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./output/allure-report
