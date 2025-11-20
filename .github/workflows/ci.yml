@@ -1,4 +1,4 @@
-name: Manual CI / Test Runner (TEST)
+name: Manual CI / Test Runner
 
 on:
   workflow_dispatch:
