@@ -1,4 +1,4 @@
-name: Manual CI / Test Runner
+name: CI / Test Runner
 
 on:
   workflow_dispatch:
@@ -56,7 +56,17 @@ jobs:
         if: ${{ github.event.inputs.runner == 'github runner' }}
         run: |
           npm install
-          npm run test:${{ github.event.inputs.environment }}
+          npm run test:${{ env.EFFECTIVE_ENV }}
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts
+          path: |
+            ./logs
+            ./output/allure-results
+          if-no-files-found: ignore
   
   # --------------------------------
   # JOB 2: Tests on Docker container
@@ -82,7 +92,7 @@ jobs:
             --user $(id -u):$(id -g) \
             -v ${{ github.workspace }}/logs:/usr/src/app/logs \
             -v ${{ github.workspace }}/output/allure-results:/usr/src/app/output/allure-results \
-            -e ENV=${{ github.event.inputs.environment }} \
+            -e ENV=${{ env.EFFECTIVE_ENV }} \
             bookstore-api-tests \
             npm run test
 
