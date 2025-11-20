@@ -61,5 +61,5 @@ jobs:
           name: test-artifacts
           path: |
             ./logs
-            ./output/allure-results
+            ./output
           if-no-files-found: ignore
