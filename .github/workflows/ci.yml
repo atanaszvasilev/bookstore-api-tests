@@ -115,8 +115,11 @@ jobs:
           path: node_modules
           key: node-modules-${{ hashFiles('package-lock.json') }}
 
-      - name: Generate Allure Report
-        run: npm run allure:generate
+      - name: Download Allure results from tests
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results
+          path: ./output/allure-results
 
       - name: Load Allure history from gh-pages
         uses: actions/checkout@v4
