@@ -1,0 +1,65 @@
+name: Manual CI / Test Runner (TEST)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment for tests'
+        required: true
+        default: stage
+        type: choice
+        options:
+          - stage
+          - prod
+      runner:
+        description: 'Execution method for tests'
+        required: true
+        default: github runner
+        type: choice
+        options:
+          - github runner
+          - docker container
+
+jobs:
+  test:
+    name: Run tests and publish report
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run tests on GitHub runner
+        if: ${{ github.event.inputs.runner == 'github runner' }}
+        run: |
+          npm install
+          npm run test:${{ github.event.inputs.environment }}
+
+      - name: Run tests in Docker container
+        if: ${{ github.event.inputs.runner == 'docker container' }}
+        run: npm run docker:test:${{ github.event.inputs.environment }}
+
+      - name: Generate Allure Report
+        if: always()
+        run: npm run allure:generate
+
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./output/allure-report
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts
+          path: |
+            ./logs
+            ./output/allure-results
+          if-no-files-found: ignore
