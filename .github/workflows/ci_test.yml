@@ -49,6 +49,10 @@ jobs:
       - name: Run tests in Docker container
         if: ${{ github.event.inputs.runner == 'docker container' }}
         run: |
+          mkdir -p ${{ github.workspace }}/logs
+          mkdir -p ${{ github.workspace }}/output/allure-results
+          chmod -R 777 ${{ github.workspace }}/logs
+          chmod -R 777 ${{ github.workspace }}/output/allure-results
           docker build -t bookstore-api-tests .
           docker run --rm \
             --user $(id -u):$(id -g) \
