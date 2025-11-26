@@ -1,0 +1,17 @@
+[2025-11-26 07:46:47.470] [INFO] ➡️ Running test: deletes non-existing book responds with 404
+[2025-11-26 07:46:47.470] [DEBUG] 📄 Creating file at: "logs/tmp/books_api_tests/deletes_non-existing_book_responds_with_404.log"
+[2025-11-26 07:46:47.470] [INFO] ℹ️ File already exists at: "logs/tmp/books_api_tests/deletes_non-existing_book_responds_with_404.log"
+[2025-11-26 07:46:47.470] [TRACE] 
+➡️ [Request] DELETE /Books/999999
+[2025-11-26 07:46:47.470] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:47.605] [TRACE] ✅ [Response] 200 /Books/999999
+[2025-11-26 07:46:47.605] [TRACE]    Response Headers: {
+  "content-length": "0",
+  "date": "Wed, 26 Nov 2025 07:46:46 GMT",
+  "server": "Kestrel",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:47.605] [TRACE]    Response Body: ""
+[2025-11-26 07:46:47.606] [ERROR] ❌ Test FAILED

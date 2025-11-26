@@ -1,0 +1,28 @@
+[2025-11-26 07:46:46.211] [INFO] ➡️ Running test: updates non-existing book responds with 404
+[2025-11-26 07:46:46.211] [DEBUG] 📄 Creating file at: "logs/tmp/books_api_tests/updates_non-existing_book_responds_with_404.log"
+[2025-11-26 07:46:46.211] [INFO] ℹ️ File already exists at: "logs/tmp/books_api_tests/updates_non-existing_book_responds_with_404.log"
+[2025-11-26 07:46:46.212] [TRACE] 
+➡️ [Request] PUT /Books/999999
+[2025-11-26 07:46:46.212] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:46.212] [TRACE]    Request Body: {
+  "title": "Fail Update"
+}
+[2025-11-26 07:46:46.346] [TRACE] ✅ [Response] 200 /Books/999999
+[2025-11-26 07:46:46.346] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:45 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:46.346] [TRACE]    Response Body: {
+  "id": 0,
+  "title": "Fail Update",
+  "description": null,
+  "pageCount": 0,
+  "excerpt": null,
+  "publishDate": "0001-01-01T00:00:00"
+}
+[2025-11-26 07:46:46.347] [ERROR] ❌ Test FAILED

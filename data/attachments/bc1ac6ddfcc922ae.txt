@@ -1,0 +1,27 @@
+[2025-11-26 07:46:49.900] [INFO] ➡️ Running test: creates author with missing idBook returns error
+[2025-11-26 07:46:49.900] [DEBUG] 📄 Creating file at: "logs/tmp/authors_api_tests/creates_author_with_missing_idbook_returns_error.log"
+[2025-11-26 07:46:49.900] [INFO] ℹ️ File already exists at: "logs/tmp/authors_api_tests/creates_author_with_missing_idbook_returns_error.log"
+[2025-11-26 07:46:49.901] [TRACE] 
+➡️ [Request] POST /Authors
+[2025-11-26 07:46:49.901] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:49.901] [TRACE]    Request Body: {
+  "firstName": "Test",
+  "lastName": "User"
+}
+[2025-11-26 07:46:50.036] [TRACE] ✅ [Response] 200 /Authors
+[2025-11-26 07:46:50.036] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:49 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:50.036] [TRACE]    Response Body: {
+  "id": 0,
+  "idBook": 0,
+  "firstName": "Test",
+  "lastName": "User"
+}
+[2025-11-26 07:46:50.037] [ERROR] ❌ Test FAILED

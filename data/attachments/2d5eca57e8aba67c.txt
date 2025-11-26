@@ -1,0 +1,24 @@
+[2025-11-26 07:46:50.451] [INFO] ➡️ Running test: creates author with empty payload returns error
+[2025-11-26 07:46:50.451] [DEBUG] 📄 Creating file at: "logs/tmp/authors_api_tests/creates_author_with_empty_payload_returns_error.log"
+[2025-11-26 07:46:50.452] [INFO] ℹ️ File already exists at: "logs/tmp/authors_api_tests/creates_author_with_empty_payload_returns_error.log"
+[2025-11-26 07:46:50.452] [TRACE] 
+➡️ [Request] POST /Authors
+[2025-11-26 07:46:50.452] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:50.452] [TRACE]    Request Body: {}
+[2025-11-26 07:46:50.585] [TRACE] ✅ [Response] 200 /Authors
+[2025-11-26 07:46:50.585] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:49 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:50.586] [TRACE]    Response Body: {
+  "id": 0,
+  "idBook": 0,
+  "firstName": null,
+  "lastName": null
+}
+[2025-11-26 07:46:50.586] [ERROR] ❌ Test FAILED

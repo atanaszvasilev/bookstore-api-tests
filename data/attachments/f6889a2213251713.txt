@@ -1,0 +1,31 @@
+[2025-11-26 07:46:45.934] [INFO] ➡️ Running test: creates book with zero pageCount responds with error
+[2025-11-26 07:46:45.934] [DEBUG] 📄 Creating file at: "logs/tmp/books_api_tests/creates_book_with_zero_pagecount_responds_with_error.log"
+[2025-11-26 07:46:45.934] [INFO] ℹ️ File already exists at: "logs/tmp/books_api_tests/creates_book_with_zero_pagecount_responds_with_error.log"
+[2025-11-26 07:46:45.934] [TRACE] 
+➡️ [Request] POST /Books
+[2025-11-26 07:46:45.935] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:45.935] [TRACE]    Request Body: {
+  "title": "Zero PageCount",
+  "description": "Zero",
+  "pageCount": 0,
+  "excerpt": "Zero"
+}
+[2025-11-26 07:46:46.068] [TRACE] ✅ [Response] 200 /Books
+[2025-11-26 07:46:46.068] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:45 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:46.068] [TRACE]    Response Body: {
+  "id": 0,
+  "title": "Zero PageCount",
+  "description": "Zero",
+  "pageCount": 0,
+  "excerpt": "Zero",
+  "publishDate": "0001-01-01T00:00:00"
+}
+[2025-11-26 07:46:46.068] [ERROR] ❌ Test FAILED

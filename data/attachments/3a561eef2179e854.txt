@@ -1,0 +1,32 @@
+[2025-11-26 07:46:45.375] [INFO] ➡️ Running test: creates book with future publish date responds with error
+[2025-11-26 07:46:45.375] [DEBUG] 📄 Creating file at: "logs/tmp/books_api_tests/creates_book_with_future_publish_date_responds_with_error.log"
+[2025-11-26 07:46:45.375] [INFO] ℹ️ File already exists at: "logs/tmp/books_api_tests/creates_book_with_future_publish_date_responds_with_error.log"
+[2025-11-26 07:46:45.376] [TRACE] 
+➡️ [Request] POST /Books
+[2025-11-26 07:46:45.376] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:45.376] [TRACE]    Request Body: {
+  "title": "Future Book",
+  "description": "Future",
+  "pageCount": 200,
+  "excerpt": "Future",
+  "publishDate": "3000-01-01T00:00:00Z"
+}
+[2025-11-26 07:46:45.510] [TRACE] ✅ [Response] 200 /Books
+[2025-11-26 07:46:45.510] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:44 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:45.510] [TRACE]    Response Body: {
+  "id": 0,
+  "title": "Future Book",
+  "description": "Future",
+  "pageCount": 200,
+  "excerpt": "Future",
+  "publishDate": "3000-01-01T00:00:00Z"
+}
+[2025-11-26 07:46:45.511] [ERROR] ❌ Test FAILED

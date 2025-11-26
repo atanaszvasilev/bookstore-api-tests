@@ -1,0 +1,30 @@
+[2025-11-26 07:46:47.611] [INFO] ➡️ Running test: deletes book twice returns 404 on second attempt
+[2025-11-26 07:46:47.611] [DEBUG] 📄 Creating file at: "logs/tmp/books_api_tests/deletes_book_twice_returns_404_on_second_attempt.log"
+[2025-11-26 07:46:47.611] [INFO] ℹ️ File already exists at: "logs/tmp/books_api_tests/deletes_book_twice_returns_404_on_second_attempt.log"
+[2025-11-26 07:46:47.611] [TRACE] 
+➡️ [Request] DELETE /Books/20
+[2025-11-26 07:46:47.611] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:47.744] [TRACE] ✅ [Response] 200 /Books/20
+[2025-11-26 07:46:47.744] [TRACE]    Response Headers: {
+  "content-length": "0",
+  "date": "Wed, 26 Nov 2025 07:46:47 GMT",
+  "server": "Kestrel",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:47.745] [TRACE]    Response Body: ""
+[2025-11-26 07:46:47.745] [TRACE] 
+➡️ [Request] DELETE /Books/20
+[2025-11-26 07:46:47.745] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:47.878] [TRACE] ✅ [Response] 200 /Books/20
+[2025-11-26 07:46:47.878] [TRACE]    Response Headers: {
+  "content-length": "0",
+  "date": "Wed, 26 Nov 2025 07:46:47 GMT",
+  "server": "Kestrel",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:47.878] [TRACE]    Response Body: ""
+[2025-11-26 07:46:47.879] [ERROR] ❌ Test FAILED

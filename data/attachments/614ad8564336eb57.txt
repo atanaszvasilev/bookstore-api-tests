@@ -1,0 +1,24 @@
+[2025-11-26 07:46:51.009] [INFO] ➡️ Running test: updates author using empty payload returns error
+[2025-11-26 07:46:51.009] [DEBUG] 📄 Creating file at: "logs/tmp/authors_api_tests/updates_author_using_empty_payload_returns_error.log"
+[2025-11-26 07:46:51.009] [INFO] ℹ️ File already exists at: "logs/tmp/authors_api_tests/updates_author_using_empty_payload_returns_error.log"
+[2025-11-26 07:46:51.009] [TRACE] 
+➡️ [Request] PUT /Authors/1
+[2025-11-26 07:46:51.009] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:51.009] [TRACE]    Request Body: {}
+[2025-11-26 07:46:51.142] [TRACE] ✅ [Response] 200 /Authors/1
+[2025-11-26 07:46:51.143] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:50 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:51.143] [TRACE]    Response Body: {
+  "id": 0,
+  "idBook": 0,
+  "firstName": null,
+  "lastName": null
+}
+[2025-11-26 07:46:51.144] [ERROR] ❌ Test FAILED
