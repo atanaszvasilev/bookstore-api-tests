@@ -15,6 +15,36 @@ export function relative(absolutePath: string): string {
 }
 
 /**
+ * Creates the specified file if it does not exist.
+ * Ensures parent directories exist before creating the file.
+ * Logs the creation or warnings/errors if the file already exists or cannot be created.
+ *
+ * @function
+ * @param {string} filePath - The path to the file to be created.
+ */
+export function createFile(filePath: string) {
+  try {
+    fileLogger.debug(`📄 Creating file at: "${relative(filePath)}"`);
+
+    // Ensure parent directories exist
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+      fileLogger.info(`📂 Created parent directories for: "${relative(filePath)}"`);
+    }
+
+    if (!fs.existsSync(filePath)) {
+      fs.writeFileSync(filePath, ''); // create empty file
+      fileLogger.info(`✅ Created file at: "${relative(filePath)}"`);
+    } else {
+      fileLogger.info(`ℹ️ File already exists at: "${relative(filePath)}"`);
+    }
+  } catch (error) {
+    fileLogger.warn(`⚠️ Failed to create file at: "${relative(filePath)}"`, error);
+  }
+}
+
+/**
  * Deletes the specified folder and all its contents recursively if it exists.
  * Logs the deletion or warnings/errors if the folder doesn't exist or cannot be deleted.
  * 
@@ -88,6 +118,50 @@ export function deleteAllFilesInFolder(folderPath: string) {
     }
   } catch (error) {
     fileLogger.warn(`⚠️ Failed to delete files in: "${path.relative(process.cwd(), folderPath)}"`, error);
+  }
+}
+
+/**
+ * Deletes all files and subfolders inside the specified folder (recursive).
+ * Logs each deleted file/folder and handles errors or missing folder gracefully.
+ * 
+ * @function
+ * @param {string} folderPath - The path to the folder whose contents should be deleted.
+ */
+export function deleteAllInFolder(folderPath: string) {
+  try {
+    fileLogger.debug(`🔄 Deleting all contents of folder: "${path.relative(process.cwd(), folderPath)}"`);
+
+    if (!fs.existsSync(folderPath)) {
+      fileLogger.warn(`⚠️ Folder not found: "${path.relative(process.cwd(), folderPath)}"`);
+      return;
+    }
+
+    const entries = fs.readdirSync(folderPath, { withFileTypes: true });
+
+    if (entries.length === 0) {
+      fileLogger.info(`ℹ️ No contents to delete in: "${path.relative(process.cwd(), folderPath)}"`);
+      return;
+    }
+
+    for (const entry of entries) {
+      const entryPath = path.join(folderPath, entry.name);
+
+      if (entry.isDirectory()) {
+        // Recursively delete subfolder
+        deleteAllInFolder(entryPath);
+        fs.rmdirSync(entryPath);
+        fileLogger.info(`🗑️📂 Deleted folder: "${path.relative(process.cwd(), entryPath)}"`);
+      } else if (entry.isFile()) {
+        fs.unlinkSync(entryPath);
+        fileLogger.info(`🗑️📄 Deleted file: "${path.relative(process.cwd(), entryPath)}"`);
+      }
+    }
+  } catch (error) {
+    fileLogger.warn(
+      `⚠️ Failed to delete contents of folder: "${path.relative(process.cwd(), folderPath)}"`,
+      error
+    );
   }
 }
 

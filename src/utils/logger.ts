@@ -1,45 +1,85 @@
-import log4js from 'log4js';
+import log4js, { Logger } from 'log4js';
+let logger: Logger;
+let fileLogger: Logger;
 
 /**
- * Configures and exports a logger instance using Log4js.
+ * Default Log4js configuration.
  * 
- * This module configures the Log4js logger with two appenders:
- * 1. One for logging to the console (stdout).
- * 2. Another for logging to a file (`logs/logs.log`).
- * 
- * The default log level is set to `debug`, meaning it will log all messages of level `debug` or higher.
- * 
- * The configured logger instance is exported for use in other parts of the application.
- * 
- * @module logger
+ * - `out`: logs to the console (stdout) with a pattern layout.
+ * - `completeLogFile`: logs to `logs/logs.log` with a pattern layout.
+ * - Default log level is `info`; `fileLogger` uses `trace` level.
  */
-log4js.configure({
+const defaultConfig = {
     appenders: {
         out: {
             type: 'stdout',
             layout: {
                 type: 'pattern',
-                pattern: `%[[%d{yyyy-MM-dd hh:mm:ss.SSS}] [%p]%] %m`,
+                pattern: `%[[%d{yyyy-MM-dd hh:mm:ss.SSS}] [%p]%] %m`
             }
         },
-        file: {
+        completeLogFile: {
             type: 'file',
             filename: 'logs/logs.log',
             layout: {
                 type: 'pattern',
-                pattern: '[%d{yyyy-MM-dd hh:mm:ss.SSS}] [%p] %m',
+                pattern: '[%d{yyyy-MM-dd hh:mm:ss.SSS}] [%p] %m'
             }
         }
     },
     categories: {
-        default: { appenders: ['out', 'file'], level: 'info' },
-        fileLogger: { appenders: ['file'], level: 'trace' }
-    },
-});
+        default: { appenders: ['out', 'completeLogFile'], level: 'info' },
+        fileLogger: { appenders: ['completeLogFile'], level: 'trace' }
+    }
+};
 
-// Create and export the logger instance
-const logger = log4js.getLogger();
-const fileLogger = log4js.getLogger('fileLogger');
+// Initial configuration
+log4js.configure(defaultConfig);
 
-// Export the logger instance for use in other parts of the application
-export { fileLogger, logger };
+// Create logger instances
+logger = log4js.getLogger();
+fileLogger = log4js.getLogger('fileLogger');
+
+/**
+ * Configures Log4js with an additional per-test log file.
+ * 
+ * @param testLogPath - File path for the temporary per-test log
+ */
+function configureLogger(testLogPath: string) {
+    const configWithTestFile = {
+        ...defaultConfig,
+        appenders: {
+            ...defaultConfig.appenders,
+            testLogFile: {
+                type: 'file',
+                filename: testLogPath,
+                layout: {
+                    type: 'pattern',
+                    pattern: '[%d{yyyy-MM-dd hh:mm:ss.SSS}] [%p] %m'
+                }
+            }
+        },
+        categories: {
+            default: { appenders: ['out', 'completeLogFile', 'testLogFile'], level: 'info' },
+            fileLogger: { appenders: ['completeLogFile', 'testLogFile'], level: 'trace' }
+        }
+    };
+
+    log4js.configure(configWithTestFile);
+    logger = log4js.getLogger();
+    fileLogger = log4js.getLogger('fileLogger');
+}
+
+/**
+ * Flush all loggers and wait until all pending writes are completed.
+ * Useful to ensure all log messages are written before reading or deleting files.
+ * 
+ * @returns Promise that resolves when loggers are flushed
+ */
+function flushLogger(): Promise<void> {
+    return new Promise((resolve, reject) => {
+        log4js.shutdown(err => (err ? reject(err) : resolve()));
+    });
+}
+
+export { configureLogger, fileLogger, flushLogger, logger };

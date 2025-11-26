@@ -1,5 +1,5 @@
-import axios from "axios";
-import { fileLogger } from "../utils/logger";
+import axios from 'axios';
+import { fileLogger } from '../utils/logger';
 
 /**
  * Axios HTTP client configured with base URL and timeout from environment variables.
@@ -7,23 +7,30 @@ import { fileLogger } from "../utils/logger";
  */
 const baseURL = process.env.BASE_URL;
 if (!baseURL) {
-    fileLogger.error("❌ BASE_URL is not defined in environment variables");
-    throw new Error("BASE_URL is missing");
+    fileLogger.error('❌ BASE_URL is not defined in environment variables');
+    throw new Error('BASE_URL is missing');
 }
 
 export const httpClient = axios.create({
     baseURL,
     timeout: Number(process.env.TIMEOUT) || 10000,
-    validateStatus: (status) => status < 400, // Reject promise for 4xx/5xx
+    validateStatus: () => true
 });
 
 // Request logging interceptor
 httpClient.interceptors.request.use(
     (config) => {
         fileLogger.trace(`\n➡️ [Request] ${config.method?.toUpperCase()} ${config.url}`);
+
+        // Log headers
+        if (config.headers) {
+            fileLogger.trace(`   Request Headers: ${JSON.stringify(config.headers, null, 2)}`);
+        }
+
         if (config.data) {
             fileLogger.trace(`   Request Body: ${JSON.stringify(config.data, null, 2)}`);
         }
+
         return config;
     },
     (error) => {
@@ -36,12 +43,24 @@ httpClient.interceptors.request.use(
 httpClient.interceptors.response.use(
     (response) => {
         fileLogger.trace(`✅ [Response] ${response.status} ${response.config.url}`);
+
+        // Log headers
+        if (response.headers) {
+            fileLogger.trace(`   Response Headers: ${JSON.stringify(response.headers, null, 2)}`);
+        }
+
         fileLogger.trace(`   Response Body: ${JSON.stringify(response.data, null, 2)}`);
         return response;
     },
     (error) => {
         if (error.response) {
             fileLogger.error(`❌ [Response Error] ${error.response.status} ${error.config.url}`);
+
+            // Log headers on error response
+            if (error.response.headers) {
+                fileLogger.error(`   Response Headers: ${JSON.stringify(error.response.headers, null, 2)}`);
+            }
+
             fileLogger.error(`   Response Body: ${JSON.stringify(error.response.data, null, 2)}`);
         } else {
             fileLogger.error(`❌ [Response Error] ${error.message}`);

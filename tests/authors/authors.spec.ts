@@ -1,105 +1,160 @@
 import { authorsApi } from '../../src/api/authors.api';
-import { Author } from '../../src/types/author';
-
-let firstAuthor: Author;
-let createdAuthors: Author[] = [];
+import { trackTestStatus } from '../../src/utils/test.utils';
 
 const firstAuthorPayload = {
+    id: 1,
     idBook: 1,
-    firstName: 'First Test Author',
-    lastName: 'Last Test Author',
+    firstName: 'First Name 1',
+    lastName: 'Last Name 1',
 };
 
-const secondAuthorPayload = {
-    idBook: 1,
-    firstName: 'Second Test Author',
-    lastName: 'Last Test Author 2',
+const newAuthorPayload = {
+    id: 600,
+    idBook: 201,
+    firstName: 'New Test Author',
+    lastName: 'New Test Author',
 };
 
-beforeAll(async () => {
-    const response = await authorsApi.create(firstAuthorPayload);
-    firstAuthor = response.data;
-    createdAuthors.push(firstAuthor);
-});
+const longString = "lorem".repeat(5000);
 
-afterAll(async () => {
-    for (const author of createdAuthors) {
-        await authorsApi.delete(author.id!);
-    }
-});
+describe('Authors API Tests:', () => {
 
-describe('Authors API Tests', () => {
+    // ------------------------------------------------------------
+    // 📘 RETRIEVE (GET) TESTS
+    // ------------------------------------------------------------
 
-    it('should create a second author', async () => {
-        const response = await authorsApi.create(secondAuthorPayload);
-        const secondAuthor = response.data;
-        createdAuthors.push(secondAuthor);
-        expect(secondAuthor).toMatchObject(secondAuthorPayload);
-    });
-
-    it('should fetch all authors', async () => {
+    test('retrieves all authors with correct schema', trackTestStatus(async () => {
         const response = await authorsApi.getAll();
-        expect(response.data.length).toBeGreaterThan(0);
-    });
-
-    it('should fetch author by ID with correct properties', async () => {
-        const response = await authorsApi.getById(1);
-        expect(response.data).toHaveProperty('id', 1);
-        expect(response.data).toHaveProperty('idBook');
-        expect(response.data).toHaveProperty('firstName');
-        expect(response.data).toHaveProperty('lastName');
-    });
-
-    it('should fetch authors by book ID', async () => {
-        const response = await authorsApi.getByBookId(1);
-        expect(Array.isArray(response.data)).toBe(true);
-        expect(response.data.length).toBeGreaterThan(0);
-
         for (const author of response.data) {
-            expect(author.idBook).toBe(1);
+            expect(author).toHaveProperty('id');
+            expect(author).toHaveProperty('idBook');
             expect(author).toHaveProperty('firstName');
             expect(author).toHaveProperty('lastName');
         }
-    });
+    }));
 
-    it('should return empty array for book ID with no authors', async () => {
-        const response = await authorsApi.getByBookId(999999);
+    test('retrieves all authors successfully', trackTestStatus(async () => {
+        const response = await authorsApi.getAll();
+        expect(response.status).toBe(200);
         expect(Array.isArray(response.data)).toBe(true);
-        expect(response.data.length).toBe(0);
-    });
+    }));
 
-    it('should return 404 for non-existing author', async () => {
-        try {
-            await authorsApi.getById(999999);
-        } catch (error: any) {
-            expect(error.response.status).toBe(404);
-        }
-    });
+    test('retrieves author by ID successfully', trackTestStatus(async () => {
+        const response = await authorsApi.create(firstAuthorPayload);
+        expect(response.data).toMatchObject(firstAuthorPayload);
+    }));
 
-    it('should update an existing author', async () => {
-        const updatedData = { ...firstAuthorPayload, firstName: 'Updated Author' };
-        const response = await authorsApi.update(firstAuthor.id!, updatedData);
-        firstAuthor = response.data;
-        expect(firstAuthor).toMatchObject(updatedData);
-    });
+    test('retrieves non-existing author ID returns 404', trackTestStatus(async () => {
+        const response = await authorsApi.getById(999999);
+        expect(response.status).toBe(404);
+        expect(response.statusText).toBe('Not Found');
+    }));
 
-    it('should fail to update non-existing author', async () => {
-        try {
-            await authorsApi.update(999999, { firstName: 'Fail Update' });
-        } catch (error: any) {
-            expect(error.response.status).toBe(404);
-        }
-    });
+    test('retrieves author using non-numeric ID returns 400', trackTestStatus(async () => {
+        const response = await authorsApi.getById("abc" as any);
+        expect(response.status).toBe(400);
+        expect(response.statusText).toBe('Bad Request');
+    }));
 
-    it('should delete an existing author', async () => {
-        await authorsApi.delete(firstAuthor.id!);
-    });
+    test('retrieves author using negative ID returns 404', trackTestStatus(async () => {
+        const response = await authorsApi.getById(-10);
+        expect(response.status).toBe(404);
+        expect(response.statusText).toBe('Not Found');
+    }));
 
-    it('should fail to delete non-existing author', async () => {
-        try {
-            await authorsApi.delete(999999);
-        } catch (error: any) {
-            expect(error.response.status).toBe(404);
-        }
-    });
+    test('retrieves author using float ID returns 400', trackTestStatus(async () => {
+        const response = await authorsApi.getById(1.7 as any);
+        expect(response.status).toBe(400);
+        expect(response.statusText).toBe('Bad Request');
+    }));
+
+    // ------------------------------------------------------------
+    // 📗 CREATE (POST) TESTS
+    // ------------------------------------------------------------
+
+    test('creates author successfully', trackTestStatus(async () => {
+        const response = await authorsApi.create(newAuthorPayload);
+        expect(response.data).toMatchObject(newAuthorPayload);
+    }));
+
+    test('creates author with missing firstName returns error', trackTestStatus(async () => {
+        const response = await authorsApi.create({ ...newAuthorPayload, firstName: '' });
+        expect(response.status).not.toBe(200);
+    }));
+
+    test('creates author with missing lastName returns error', trackTestStatus(async () => {
+        const response = await authorsApi.create({ ...newAuthorPayload, lastName: '' });
+        expect(response.status).not.toBe(200);
+    }));
+
+    test('creates author with missing idBook returns error', trackTestStatus(async () => {
+        const response = await authorsApi.create({ firstName: "Test", lastName: "User" } as any);
+        expect(response.status).not.toBe(200);
+    }));
+
+    test('creates author with extremely long fields returns error', trackTestStatus(async () => {
+        const response = await authorsApi.create({
+            ...firstAuthorPayload,
+            firstName: longString,
+            lastName: longString
+        });
+        expect(response.status).not.toBe(200);
+    }));
+
+    test('creates author with unexpected extra fields returns error', trackTestStatus(async () => {
+        const response = await authorsApi.create({
+            ...firstAuthorPayload,
+            extra: "unexpected"
+        } as any);
+        expect(response.status).not.toBe(200);
+    }));
+
+    test('creates author with empty payload returns error', trackTestStatus(async () => {
+        const response = await authorsApi.create({} as any);
+        expect(response.status).not.toBe(200);
+    }));
+
+    // ------------------------------------------------------------
+    // 📙 UPDATE (PUT) TESTS
+    // ------------------------------------------------------------
+
+    test('updates author successfully', trackTestStatus(async () => {
+        const updated = {
+            ...firstAuthorPayload,
+            firstName: 'UpdatedName'
+        };
+        const response = await authorsApi.update(firstAuthorPayload.id, updated);
+        expect(response.data.firstName).toBe('UpdatedName');
+    }));
+
+    test('updates non-existing author returns 404', trackTestStatus(async () => {
+        const response = await authorsApi.update(999999, { firstName: 'Fail' });
+        expect(response.status).toBe(404);
+        expect(response.statusText).toBe('Not Found');
+    }));
+
+    test('updates author using invalid idBook returns error', trackTestStatus(async () => {
+        const response = await authorsApi.update(firstAuthorPayload.id, { idBook: "wrong" } as any);
+        expect(response.status).not.toBe(200);
+    }));
+
+    test('updates author using empty payload returns error', trackTestStatus(async () => {
+        const response = await authorsApi.update(firstAuthorPayload.id, {});
+        expect(response.status).not.toBe(200);
+    }));
+
+    // ------------------------------------------------------------
+    // 📕 DELETE TESTS
+    // ------------------------------------------------------------
+
+    test('deletes author successfully', trackTestStatus(async () => {
+        const response = await authorsApi.delete(firstAuthorPayload.id);
+        expect(response.status).toBe(200);
+    }));
+
+    test('deletes non-existing author returns 404', trackTestStatus(async () => {
+        const response = await authorsApi.delete(999999);
+        expect(response.status).toBe(404);
+        expect(response.statusText).toBe('Not Found');
+    }));
 });

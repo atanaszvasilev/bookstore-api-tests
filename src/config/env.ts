@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 import fs from 'fs';
-import path from "path";
+import path from 'path';
 import { fileLogger, logger } from '../utils/logger';
 
 /**
@@ -9,7 +9,7 @@ import { fileLogger, logger } from '../utils/logger';
  * Logs active environment and environment properties to the file logger.
  */
 export function loadEnv() {
-    const env = process.env.ENV || "stage";
+    const env = process.env.ENV || 'stage';
     const envFile = path.resolve(process.cwd(), `.env.${env}`);
 
     // Ensure the .env file exists

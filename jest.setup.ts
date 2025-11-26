@@ -1,6 +1,10 @@
 import { loadEnv } from './src/config/env';
-import { deleteAllFilesInFolder } from './src/utils/fs.utils';
+import { deleteAllInFolder } from './src/utils/fs.utils';
 import { logger } from './src/utils/logger';
+
+declare global {
+  var testPassed: boolean | false;
+}
 
 /**
  * Global setup for tests.
@@ -9,12 +13,12 @@ import { logger } from './src/utils/logger';
  * - Logs test execution start.
  */
 export default async () => {
-    // Remove previous logs
-    deleteAllFilesInFolder('logs');
+  // Remove previous logs
+  deleteAllInFolder('logs');
 
-    // Load environment configuration
-    loadEnv();
+  // Load environment configuration
+  loadEnv();
 
-    // Log start of test execution
-    logger.info('\n\n▶️ Starting test execution...\n');
+  // Log start of test execution
+  logger.info('\n\n▶️ Starting test execution...\n');
 };
