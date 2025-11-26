@@ -1,0 +1,33 @@
+[2025-11-26 07:46:21.912] [INFO] ➡️ Running test: creates book with unexpected extra fields responds with error
+[2025-11-26 07:46:21.912] [DEBUG] 📄 Creating file at: "logs/tmp/books_api_tests/creates_book_with_unexpected_extra_fields_responds_with_error.log"
+[2025-11-26 07:46:21.912] [INFO] ℹ️ File already exists at: "logs/tmp/books_api_tests/creates_book_with_unexpected_extra_fields_responds_with_error.log"
+[2025-11-26 07:46:21.913] [TRACE] 
+➡️ [Request] POST /Books
+[2025-11-26 07:46:21.913] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:21.913] [TRACE]    Request Body: {
+  "title": "The New Test Book",
+  "description": "Description for the new test book",
+  "pageCount": 240,
+  "excerpt": "Excerpt for the new test book",
+  "publishDate": "2025-11-26T07:46:19.015Z",
+  "unexpected": "value"
+}
+[2025-11-26 07:46:22.005] [TRACE] ✅ [Response] 200 /Books
+[2025-11-26 07:46:22.006] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:21 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:22.006] [TRACE]    Response Body: {
+  "id": 0,
+  "title": "The New Test Book",
+  "description": "Description for the new test book",
+  "pageCount": 240,
+  "excerpt": "Excerpt for the new test book",
+  "publishDate": "2025-11-26T07:46:19.015Z"
+}
+[2025-11-26 07:46:22.007] [ERROR] ❌ Test FAILED

@@ -1,0 +1,30 @@
+[2025-11-26 07:46:26.154] [INFO] ➡️ Running test: creates author with unexpected extra fields returns error
+[2025-11-26 07:46:26.155] [DEBUG] 📄 Creating file at: "logs/tmp/authors_api_tests/creates_author_with_unexpected_extra_fields_returns_error.log"
+[2025-11-26 07:46:26.155] [INFO] ℹ️ File already exists at: "logs/tmp/authors_api_tests/creates_author_with_unexpected_extra_fields_returns_error.log"
+[2025-11-26 07:46:26.155] [TRACE] 
+➡️ [Request] POST /Authors
+[2025-11-26 07:46:26.155] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:26.155] [TRACE]    Request Body: {
+  "id": 1,
+  "idBook": 1,
+  "firstName": "First Name 1",
+  "lastName": "Last Name 1",
+  "extra": "unexpected"
+}
+[2025-11-26 07:46:26.256] [TRACE] ✅ [Response] 200 /Authors
+[2025-11-26 07:46:26.256] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:25 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:26.256] [TRACE]    Response Body: {
+  "id": 1,
+  "idBook": 1,
+  "firstName": "First Name 1",
+  "lastName": "Last Name 1"
+}
+[2025-11-26 07:46:26.257] [ERROR] ❌ Test FAILED

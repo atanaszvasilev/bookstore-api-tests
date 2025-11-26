@@ -1,0 +1,31 @@
+[2025-11-26 07:46:21.012] [INFO] ➡️ Running test: creates book with missing title responds with error
+[2025-11-26 07:46:21.012] [DEBUG] 📄 Creating file at: "logs/tmp/books_api_tests/creates_book_with_missing_title_responds_with_error.log"
+[2025-11-26 07:46:21.012] [INFO] ℹ️ File already exists at: "logs/tmp/books_api_tests/creates_book_with_missing_title_responds_with_error.log"
+[2025-11-26 07:46:21.013] [TRACE] 
+➡️ [Request] POST /Books
+[2025-11-26 07:46:21.013] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:21.013] [TRACE]    Request Body: {
+  "description": "Description for the new test book",
+  "pageCount": 240,
+  "excerpt": "Excerpt for the new test book",
+  "publishDate": "2025-11-26T07:46:19.015Z"
+}
+[2025-11-26 07:46:21.105] [TRACE] ✅ [Response] 200 /Books
+[2025-11-26 07:46:21.105] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:20 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:21.105] [TRACE]    Response Body: {
+  "id": 0,
+  "title": null,
+  "description": "Description for the new test book",
+  "pageCount": 240,
+  "excerpt": "Excerpt for the new test book",
+  "publishDate": "2025-11-26T07:46:19.015Z"
+}
+[2025-11-26 07:46:21.107] [ERROR] ❌ Test FAILED

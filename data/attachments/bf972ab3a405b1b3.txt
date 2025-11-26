@@ -1,0 +1,29 @@
+[2025-11-26 07:46:25.666] [INFO] ➡️ Running test: creates author with missing firstName returns error
+[2025-11-26 07:46:25.666] [DEBUG] 📄 Creating file at: "logs/tmp/authors_api_tests/creates_author_with_missing_firstname_returns_error.log"
+[2025-11-26 07:46:25.666] [INFO] ℹ️ File already exists at: "logs/tmp/authors_api_tests/creates_author_with_missing_firstname_returns_error.log"
+[2025-11-26 07:46:25.667] [TRACE] 
+➡️ [Request] POST /Authors
+[2025-11-26 07:46:25.667] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:25.667] [TRACE]    Request Body: {
+  "id": 600,
+  "idBook": 201,
+  "firstName": "",
+  "lastName": "New Test Author"
+}
+[2025-11-26 07:46:25.759] [TRACE] ✅ [Response] 200 /Authors
+[2025-11-26 07:46:25.759] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:25 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:25.760] [TRACE]    Response Body: {
+  "id": 600,
+  "idBook": 201,
+  "firstName": "",
+  "lastName": "New Test Author"
+}
+[2025-11-26 07:46:25.762] [ERROR] ❌ Test FAILED

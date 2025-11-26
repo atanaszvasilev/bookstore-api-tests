@@ -1,0 +1,49 @@
+[2025-11-26 07:46:23.420] [INFO] ➡️ Running test: updates single field while keeping others unchanged
+[2025-11-26 07:46:23.420] [DEBUG] 📄 Creating file at: "logs/tmp/books_api_tests/updates_single_field_while_keeping_others_unchanged.log"
+[2025-11-26 07:46:23.421] [INFO] ℹ️ File already exists at: "logs/tmp/books_api_tests/updates_single_field_while_keeping_others_unchanged.log"
+[2025-11-26 07:46:23.421] [TRACE] 
+➡️ [Request] GET /Books/1
+[2025-11-26 07:46:23.421] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:23.515] [TRACE] ✅ [Response] 200 /Books/1
+[2025-11-26 07:46:23.515] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:22 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:23.515] [TRACE]    Response Body: {
+  "id": 1,
+  "title": "Book 1",
+  "description": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "pageCount": 100,
+  "excerpt": "Lorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\nLorem lorem lorem. Lorem lorem lorem. Lorem lorem lorem.\n",
+  "publishDate": "2025-11-25T07:46:23.4703567+00:00"
+}
+[2025-11-26 07:46:23.516] [TRACE] 
+➡️ [Request] PUT /Books/1
+[2025-11-26 07:46:23.516] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:23.516] [TRACE]    Request Body: {
+  "title": "Updated title only"
+}
+[2025-11-26 07:46:23.606] [TRACE] ✅ [Response] 200 /Books/1
+[2025-11-26 07:46:23.607] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:22 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:23.607] [TRACE]    Response Body: {
+  "id": 0,
+  "title": "Updated title only",
+  "description": null,
+  "pageCount": 0,
+  "excerpt": null,
+  "publishDate": "0001-01-01T00:00:00"
+}
+[2025-11-26 07:46:23.608] [ERROR] ❌ Test FAILED

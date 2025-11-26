@@ -1,0 +1,26 @@
+[2025-11-26 07:46:23.225] [INFO] ➡️ Running test: updates book with empty payload responds with error
+[2025-11-26 07:46:23.225] [DEBUG] 📄 Creating file at: "logs/tmp/books_api_tests/updates_book_with_empty_payload_responds_with_error.log"
+[2025-11-26 07:46:23.225] [INFO] ℹ️ File already exists at: "logs/tmp/books_api_tests/updates_book_with_empty_payload_responds_with_error.log"
+[2025-11-26 07:46:23.226] [TRACE] 
+➡️ [Request] PUT /Books/1
+[2025-11-26 07:46:23.226] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:23.226] [TRACE]    Request Body: {}
+[2025-11-26 07:46:23.317] [TRACE] ✅ [Response] 200 /Books/1
+[2025-11-26 07:46:23.317] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:22 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:23.317] [TRACE]    Response Body: {
+  "id": 0,
+  "title": null,
+  "description": null,
+  "pageCount": 0,
+  "excerpt": null,
+  "publishDate": "0001-01-01T00:00:00"
+}
+[2025-11-26 07:46:23.318] [ERROR] ❌ Test FAILED

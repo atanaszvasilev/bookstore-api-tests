@@ -1,0 +1,26 @@
+[2025-11-26 07:46:26.459] [INFO] ➡️ Running test: updates non-existing author returns 404
+[2025-11-26 07:46:26.459] [DEBUG] 📄 Creating file at: "logs/tmp/authors_api_tests/updates_non-existing_author_returns_404.log"
+[2025-11-26 07:46:26.459] [INFO] ℹ️ File already exists at: "logs/tmp/authors_api_tests/updates_non-existing_author_returns_404.log"
+[2025-11-26 07:46:26.460] [TRACE] 
+➡️ [Request] PUT /Authors/999999
+[2025-11-26 07:46:26.460] [TRACE]    Request Headers: {
+  "Accept": "application/json, text/plain, */*"
+}
+[2025-11-26 07:46:26.460] [TRACE]    Request Body: {
+  "firstName": "Fail"
+}
+[2025-11-26 07:46:26.550] [TRACE] ✅ [Response] 200 /Authors/999999
+[2025-11-26 07:46:26.551] [TRACE]    Response Headers: {
+  "content-type": "application/json; charset=utf-8; v=1.0",
+  "date": "Wed, 26 Nov 2025 07:46:25 GMT",
+  "server": "Kestrel",
+  "transfer-encoding": "chunked",
+  "api-supported-versions": "1.0"
+}
+[2025-11-26 07:46:26.551] [TRACE]    Response Body: {
+  "id": 0,
+  "idBook": 0,
+  "firstName": "Fail",
+  "lastName": null
+}
+[2025-11-26 07:46:26.552] [ERROR] ❌ Test FAILED
